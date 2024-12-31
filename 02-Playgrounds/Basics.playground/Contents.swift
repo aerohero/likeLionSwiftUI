@@ -1,3 +1,8 @@
-import UIKit
+import Foundation
 
-var greeting = "Hello, playground"
+// runOptional()
+// runFunction()
+// runClass()
+// runStruct()
+//runEnum()
+runClosure()
