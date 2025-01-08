@@ -1,14 +1,9 @@
-/*.start {
-    display: flex;
-    flex-direction: column;
-}*/
-
 article {
     display: flex;
     flex-direction: column;
 }
 
-.queston {
+.question {
     display: none;
 }
 
