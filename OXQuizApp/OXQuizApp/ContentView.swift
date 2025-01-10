@@ -97,7 +97,7 @@ struct ContentView: View {
         newQuiz()
     }
     
-    // 퀴즈 교체
+    // 퀴즈 교체 ⭐️안되서 강의보고 해결한 부분
     func newQuiz() {
         number1 = .random(in: 0...10)
         number2 = .random(in: 0...10)
