@@ -18,14 +18,12 @@ struct ContentView: View {
     var body: some View {
         // UI 구성 및 로직
         VStack {
-            Spacer()
-            
             Text("다음 수식은 맞을까요?")
                 .font(.largeTitle)
+                .padding(.top, 40)
             Spacer()
             
-            Text(quiz)
-//            Text("\(num1) X \(num2) = \(resultNumberRandom)")
+            Text("\(number1) X \(number2) = \(resultNumber)")
                 .font(.largeTitle)
             Spacer()
             
@@ -68,7 +66,7 @@ struct ContentView: View {
                     .font(.largeTitle)
                     .foregroundStyle(.blue)
             }
-            Spacer()
+            .padding(.bottom, 20)
         }
     }
     
@@ -76,44 +74,39 @@ struct ContentView: View {
     func reloadGame() {
         countCorrect = 0
         countWrong = 0
-        quiz()
+        newQuiz()
     }
     
     // 정답 선택 시 로직
     func selectCorrect() {
-        if resultNumber == (number1 * number2) {
-            countCorrect += 1
-        } else {
-            selectWrong()
-        }
-        quiz()
-    }
-    
-    // 오답 선택 시 로직
-    func selectWrong() {
-        if resultNumber == (number1 * number2) {
+        if resultNumber == number1 * number2 {
             countCorrect += 1
         } else {
             countWrong += 1
         }
-        quiz()
+        newQuiz()
+    }
+    
+    // 오답 선택 시 로직
+    func selectWrong() {
+        if resultNumber != number1 * number2 {
+            countCorrect += 1
+        } else {
+            countWrong += 1
+        }
+        newQuiz()
     }
     
     // 퀴즈 교체
-//    func quiz(num1: Int, num2: Int) -> String {
-//        var quizRandom: String = "\(num1) X \(num2) = \(resultNumberRandom)"
-//        var quizCorrect: String = "\(num1) X \(num2) = \(num1*num2)"
-//        var quizArray: [String] = [quizRandom, quizCorrect]
-//        var quizReturn = quizArray.randomElement()
-//        
-//        return quizReturn
-//    }
-    
-    func quiz() {
+    func newQuiz() {
         number1 = .random(in: 0...10)
         number2 = .random(in: 0...10)
-        resultNumber = .random(in: 0...100)
         
+        if Int.random(in: 0...1) == 0 {
+            resultNumber = number1 * number2
+        } else {
+            resultNumber = number1 * number2 + Int.random(in: -1...8)
+        }
     }
 }
 
