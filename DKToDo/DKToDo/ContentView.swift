@@ -24,6 +24,10 @@ struct ContentView: View {
             VStack {
                 TextField("Write here your task to do", text: $todo)
                 DatePicker("Due Date:", selection: $dueDate, displayedComponents: [.date])
+                Text("LIST")
+                    .font(.title3)
+                    .fontWeight(.black)
+                    .padding()
             }
             .font(.title2)
             .padding(20)
@@ -34,9 +38,8 @@ struct ContentView: View {
                     HStack {
                         Text(task.todo ?? "Not Found")
                         Spacer()
-                        Text("DueDate")
+                        Text("\(task.dueDate, format: Date.FormatStyle(date: .numeric))")
                     }
-                    Text("\(task.dueDate, format: Date.FormatStyle(date: .numeric))")
                 }
                 .onDelete(perform: deleteTodo)
             }
