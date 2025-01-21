@@ -11,10 +11,10 @@ import SwiftData
 @Model
 final class TodoItem: Identifiable, Hashable {
     var id: String = UUID().uuidString
-    var title: String
-    var isCompleted: Bool
-    var createdAt: Date
-    var priority: Priority
+    var title: String = ""
+    var isCompleted: Bool = false
+    var createdAt: Date = Date()
+    var priority: Priority = Priority.medium
     
     init(title: String, isCompleted: Bool = false, priority: Priority = Priority.medium, createdAt: Date = Date()) {
         self.title = title

@@ -32,10 +32,17 @@ struct TodoListView: View {
         _todos = Query(filter: predicate, sort: [SortDescriptor(\TodoItem.createdAt)])
     }
     
+    var filteredTodos: [TodoItem] {
+        if let priority = priorityFilter {
+            return todos.filter { $0.priority == priority }
+        }
+        return todos
+    }
+    
     // View
     var body: some View {
         List {
-            ForEach(todos) { item in
+            ForEach(filteredTodos) { item in
                 TodoRowView(todo: item) // view call
             }
             .onDelete(perform: deleteItems) // 아래 deleteItem 함수 선언되어 있다.
