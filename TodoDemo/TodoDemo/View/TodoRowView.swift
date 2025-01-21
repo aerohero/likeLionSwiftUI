@@ -9,6 +9,12 @@ import SwiftUI
 
 struct TodoRowView: View {
     let todo: TodoItem
+    let showCategory: Bool
+        
+    init(todo: TodoItem, showCategory: Bool = true) {
+        self.todo = todo
+        self.showCategory = showCategory
+    }
     
     @State private var showingEditView: Bool = false
     
@@ -26,6 +32,14 @@ struct TodoRowView: View {
                 }
             }
             Spacer()
+            if showCategory,
+               let category = todo.category {
+                    Text(category.name ?? "-")
+                        .font(.caption)
+                        .padding(4)
+                        .background(Color.blue.opacity(0.2))
+                        .clipShape(.rect(cornerRadius: 4))
+               }
             PriorityBadge(priority: todo.priority)
         }
         .onTapGesture {
@@ -53,7 +67,9 @@ struct TodoRowView: View {
 #Preview {
     NavigationStack {
         List {
-            TodoRowView(todo: TodoItem(title: "Hello, world!", dueDate: Date().addingTimeInterval(-1000)))
+            TodoRowView(todo: TodoItem(title: "Hello, world!",
+                                       dueDate: Date().addingTimeInterval(-1000),
+                                       category: Category(name: "업무")))
         }
         .navigationTitle("Todo List")
     }

@@ -57,7 +57,11 @@ struct ContentView: View {
                         .navigationTitle("Todo List")
                         .toolbar {
                             ToolbarItem(placement: .navigationBarTrailing) {
-                                EditButton()
+//                                EditButton() // DK 어짜피 리스트 편집은 여기서 사용하지 않게 되므로 카테고리 편집 기능으로 변경
+                                NavigationLink { CategoryListView()
+                                } label: {
+                                    Image(systemName: "gearshape.fill")
+                                }
                             }
                             ToolbarItem {
                                 Button(action: {
