@@ -19,9 +19,11 @@ struct TodoRowView: View {
             VStack(alignment: .leading) {
                 Text(todo.title)
                     .strikethrough(todo.isCompleted) // 텍스트 취소선 기능
-                Text(todo.createdAt, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    .font(.caption)
-                    .foregroundStyle(.gray)
+                if let dueDate = todo.dueDate {
+                    Text(todo.createdAt, format: Date.FormatStyle(date: .numeric, time: .standard))
+                        .font(.caption)
+                        .foregroundStyle(dueDate > Date.now ? .gray : .red)
+                }
             }
             Spacer()
             PriorityBadge(priority: todo.priority)
@@ -45,23 +47,13 @@ struct TodoRowView: View {
                 EditTodoView(todo: todo) // view call
             }
         }
-        
-//        NavigationLink {
-////        Text("(\(item.title) at \(item.createdAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
-//            TodoDetailView(item: item)
-//        } label: {
-//            Text("\(item.title) at \(item.createdAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
-//        }
-//        .sheet(isPresented: $showingEditView) {
-//            EditTodoView(todo: item)
-//        }
     }
 }
 
 #Preview {
     NavigationStack {
         List {
-            TodoRowView(todo: TodoItem(title: "Hello, world!"))
+            TodoRowView(todo: TodoItem(title: "Hello, world!", dueDate: Date().addingTimeInterval(-1000)))
         }
         .navigationTitle("Todo List")
     }
