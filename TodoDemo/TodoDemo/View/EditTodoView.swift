@@ -67,6 +67,7 @@ struct EditTodoView: View {
                     todo.title = title
                     todo.priority = priority
                     todo.dueDate = dueDateEnabled ? dueDate : nil
+                    todo.category = selectedCategory
                     // 뷰 닫기와 동시에 모델 컨텍스트 저장이 호출된다.
                     dismiss()
                 }

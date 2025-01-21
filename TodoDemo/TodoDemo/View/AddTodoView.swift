@@ -69,7 +69,8 @@ struct AddTodoView: View {
                         // 변수를 선언하면서 새로운 값을 변수에 저장하는 코드
                         let todo = TodoItem(title: title,
                                             priority: priority,
-                                            dueDate: dueDateEnabled ? dueDate : nil)
+                                            dueDate: dueDateEnabled ? dueDate : nil,
+                                            category: selectedCategory)
                         modelContext.insert(todo)
                         // 뷰 닫기와 동시에 모델 컨텍스트 저장이 호출된다.
                         dismiss()
