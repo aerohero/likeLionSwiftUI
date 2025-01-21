@@ -13,17 +13,26 @@ struct EditTodoView: View {
     let todo: TodoItem
     
     @State private var title: String = ""
+    @State private var priority: Priority
     
     init(todo: TodoItem) {
         self.todo = todo
         self._title = State(initialValue: todo.title)
+        self._priority = State(initialValue: todo.priority)
     }
     
+    // View
     var body: some View {
-        NavigationStack {
+//        NavigationStack {
             Form {
                 Section {
                     TextField("Title", text: $title)
+                    Picker("우선순위", selection: $priority) {
+                        ForEach(Priority.allCases, id: \.self) { Priority in
+                            Text(priority.title)
+                                .tag(priority)
+                        }
+                    }
                 }
             }
             .navigationTitle("Edit Todo")
@@ -32,6 +41,7 @@ struct EditTodoView: View {
                     Button("Save") {
                         // 수정 가능
                         todo.title = title
+                        todo.priority = priority
                         // 뷰 닫기와 동시에 모델 컨텍스트 저장이 호출된다.
                         dismiss()
                     }
@@ -43,7 +53,7 @@ struct EditTodoView: View {
                     }
                 }
             }
-        }
+//        } // NavigationStack
     }
 }
 

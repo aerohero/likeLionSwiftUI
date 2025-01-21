@@ -17,7 +17,7 @@ struct TodoDetailView: View {
     @State private var showingEditView: Bool = false
     
     var body: some View {
-        NavigationStack {
+//        NavigationStack {
             Text("\(item.title) at \(item.createdAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -29,15 +29,15 @@ struct TodoDetailView: View {
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Edit") {
-                            showingEditView = true
+                            showingEditView = true // view call로 연결된다.
                         }
                     }
                 }
                 .navigationTitle(item.title)
                 .sheet(isPresented: $showingEditView) {
-                    EditTodoView(todo: item)
+                    EditTodoView(todo: item) // view call + DK modal이라서 그런지 EditTodoView의 버튼이 나타나지 않는 문제가 생긴다.
                 }
-        }
+//        } // NavigationStack
     }
 }
 
