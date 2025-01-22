@@ -19,8 +19,8 @@ enum SchemaV2: VersionedSchema {
     final class TodoItem: Identifiable, Hashable {
         var id: String = UUID().uuidString
         var title: String = ""
-        var dueDate: Date?
-        var category: Category? = nil
+        var dueDate: Date? // 추가
+        var category: Category? = nil // 추가
         var isCompleted: Bool = false
         var createdAt: Date = Date()
         var priority: Priority = Priority.medium
