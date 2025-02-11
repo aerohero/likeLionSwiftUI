@@ -1,10 +1,11 @@
 class BankAccount {
-  String _accountNumber; // _ 언더바 = private
+  String _accountNumber; // _ 언더바 = private = DK 내부 데이터 접근 제한 (데이터 은닉)
   double _balance = 0.0;
 
   BankAccount(this._accountNumber);
 
-  // Getter 내부 데이터 접근 제한 (데이터 은닉)
+  // ~~Getter 내부 데이터 접근 제한 (데이터 은닉)~~
+  // DK 읽기 전용 = 외부 인스턴스에서 .accountNumber로 변수처럼 접근 가능
   String get accountNumber => _accountNumber;
   double get balance => _balance;
 
@@ -34,8 +35,8 @@ class BankAccount {
 
 void main() {
   var account = BankAccount('123-456-789');
-  print('계좌번호: ${account._accountNumber}');
-  print('잔약: ${account.balance}');
+  print('계좌번호: ${account.accountNumber}');
+  print('잔액: ${account.balance}');
 
   account.deposit(100.0);
   account.withdraw(50.0);
