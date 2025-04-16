@@ -13,9 +13,17 @@ struct AlbertosRestaurantMenuApp: App {
     WindowGroup {
       //            MenuList(sections: groupMenuByCategory(menu))
       NavigationStack {
+        //        MenuList(viewModel: .init(
+        //          menu: menu,
+        //          menuGrouping: groupMenuByCategory
+        //        ))
+        //        MenuList(viewModel: .init(
+        //          menuFetching: MenuFetchingPlaceholder(),
+        //          menuGrouping: groupMenuByCategory
+        //        ))
         MenuList(viewModel: .init(
-          menu: menu,
-          menuGrouping: groupMenuByCategory
+          menuFetching: MenuFetchingPlaceholder()
+          
         ))
       }
     }

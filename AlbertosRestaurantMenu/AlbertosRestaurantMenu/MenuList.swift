@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import Combine
 
 struct MenuList: View {
-//  let sections: [MenuSection]
-  let viewModel: ViewModel // DK: 아래 extension으로 중첩 객체 구성했기 때문에 MenuList.ViewModel에서 MenuList. 생략된 것임
+  //  let sections: [MenuSection]
+  @StateObject var viewModel: ViewModel
+  // DK: 아래 extension으로 중첩 객체 구성했기 때문에 MenuList.ViewModel에서 MenuList. 생략된 것임
   
   var body: some View {
     List {
@@ -26,20 +28,41 @@ struct MenuList: View {
 }
 
 extension MenuList {
-  struct ViewModel {
-    let sections: [MenuSection]
+  //  struct ViewModel {
+  //    let sections: [MenuSection]
+  //
+  //    init(menu: [MenuItem], menuGrouping: @escaping ([MenuItem]) -> [MenuSection]) {
+  //      self.sections = menuGrouping(menu)
+  //    }
+  //  }
+  //}
+  class ViewModel: ObservableObject {
+    @Published private(set) var sections: [MenuSection]
     
-    init(menu: [MenuItem], menuGrouping: @escaping ([MenuItem]) -> [MenuSection]) {
-      self.sections = menuGrouping(menu)
-    }
+    var cancellables = Set<AnyCancellable>()
+    
+    init(
+      menuFetching: MenuFetching,
+      menuGrouping: @escaping ([MenuItem]) -> [MenuSection] = groupMenuByCategory) {
+        self.sections = []
+        menuFetching.fetchMenu()
+          .sink(
+            receiveCompletion: { _ in },
+            receiveValue: { [weak self] items in
+              self?.sections = menuGrouping(items)
+            })
+          .store(in: &cancellables)
+      }
   }
 }
 
-
 #Preview {
   NavigationStack {
-//    MenuList(sections: groupMenuByCategory(menu))
-    MenuList(viewModel: .init(menu: menu,
-                                  menuGrouping: groupMenuByCategory))
+    //    MenuList(sections: groupMenuByCategory(menu))
+    //    MenuList(viewModel: .init(menu: menu,
+    //                              menuGrouping: groupMenuByCategory))
+    //    MenuList(viewModel: .init(menuFetching: MenuFetchingPlaceholder(),
+    //                              menuGrouping: groupMenuByCategory))
+    MenuList(viewModel: .init(menuFetching: MenuFetchingPlaceholder()))
   }
 }
