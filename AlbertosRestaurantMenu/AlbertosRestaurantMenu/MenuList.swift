@@ -15,16 +15,32 @@ struct MenuList: View {
   
   var body: some View {
     List {
-      ForEach(viewModel.sections) { section in
-        Section(header: Text(section.category)) {
-          ForEach(section.items) { item in
-            MenuRow(viewModel: .init(item: item))
+      switch viewModel.sections {
+      case .success(let sections):
+        ForEach(sections) { section in
+          Section(header: Text(section.category)) {
+            ForEach(section.items) { item in
+              MenuRow(viewModel: .init(item: item))
+            }
           }
         }
+      case .failure(let error):
+        Text("An error occurred:")
+        Text(error.localizedDescription).italic()
+        Button("Retry") {
+          viewModel.retry()
+        }
+        .padding()
+        .background(Color.blue)
+        .foregroundStyle(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
       }
     }
+    .refreshable {
+      viewModel.retry()
+    }
     .navigationTitle("Alberto's 🇮🇹")
-  }
+}
 }
 
 extension MenuList {
@@ -37,22 +53,41 @@ extension MenuList {
   //  }
   //}
   class ViewModel: ObservableObject {
-    @Published private(set) var sections: [MenuSection]
+    @Published private(set) var sections: Result<[MenuSection], Error> = .success([])
+    
+    private let menuFetching: MenuFetching
+    private let menuGrouping: ([MenuItem]) -> [MenuSection]
     
     var cancellables = Set<AnyCancellable>()
     
-    init(
-      menuFetching: MenuFetching,
-      menuGrouping: @escaping ([MenuItem]) -> [MenuSection] = groupMenuByCategory) {
-        self.sections = []
-        menuFetching.fetchMenu()
-          .sink(
-            receiveCompletion: { _ in },
-            receiveValue: { [weak self] items in
-              self?.sections = menuGrouping(items)
-            })
-          .store(in: &cancellables)
-      }
+    init(menuFetching: MenuFetching,
+         menuGrouping: @escaping ([MenuItem]) -> [MenuSection] = groupMenuByCategory) {
+      self.menuFetching = menuFetching
+      self.menuGrouping = menuGrouping
+      fetchMenu()
+    }
+    
+    func fetchMenu() {
+      menuFetching
+        .fetchMenu()
+      // [중요] 전달 받은 [MenuItem] 시퀀스를 menuGrouping 함수에 전달하도록 수정
+        .map(menuGrouping)
+      // [중요] Result<[MenuSection], Error> 타입으로 변환
+        .sink(
+          receiveCompletion: { [weak self] completion in
+            if case .failure(let error) = completion {
+              self?.sections = .failure(error)
+            }
+          },
+          receiveValue: { [weak self] value in
+            self?.sections = .success(value)
+          })
+        .store(in: &cancellables)
+    }
+    
+    func retry() {
+      fetchMenu()
+    }
   }
 }
 

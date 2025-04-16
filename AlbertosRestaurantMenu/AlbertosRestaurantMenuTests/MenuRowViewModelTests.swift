@@ -36,20 +36,17 @@ final class MenuRowViewModelTests: XCTestCase {
     try XCTSkipIf(true, "skipping this for now, keeping it to reuse part of the code later on")
     
     var called = false
-    let inputSections = [MenuSection.fixture()]
+    let inputSections: [MenuSection] = [.fixture()]
     let spyClosure: ([MenuItem]) -> [MenuSection] = { items in
       called = true
       return inputSections
     }
-//    let viewModel = MenuList.ViewModel(menu: [.fixture()], menuGrouping: spyClosure)
-    let viewModel = MenuList.ViewModel(menuFetching: MenuFetchingPlaceholder(),
-                                           menuGrouping: spyClosure)
-    let sections = viewModel.sections
+    let menuItems: [MenuItem] = inputSections.flatMap { $0.items }
+    let viewModel = MenuList.ViewModel(
+      menuFetching: MenuFetchingStub(returning: .success(menuItems)),
+      menuGrouping: spyClosure)
     
-    // 주어진 클로저가 호출되었는지 확인합니다.
-    XCTAssertTrue(called)
-
-    // 반환된 값이 클로저로 생성된 값인지 확인합니다.
+    let sections = try viewModel.sections.get()
     XCTAssertEqual(sections, inputSections)
   }
   

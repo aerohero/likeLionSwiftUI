@@ -10,8 +10,16 @@ import Combine
 
 class MenuFetchingPlaceholder: MenuFetching {
   func fetchMenu() -> AnyPublisher<[MenuItem], Error> {
-    return Future { $0(.success(menu)) }
-      .delay(for: 0.5, scheduler: RunLoop.main)
-      .eraseToAnyPublisher()
+    return Future {
+      // 랜덤하게 실패와 성공을 발행
+      let isSuccess = Bool.random()
+      if isSuccess {
+        $0(.success(menu))
+      } else {
+        $0(.failure(NSError(domain: "API 호출에 실패 했습니다.", code: -1, userInfo: nil)))
+      }
+    }
+    .delay(for: 0.5, scheduler: RunLoop.main)
+    .eraseToAnyPublisher()
   }
 }
